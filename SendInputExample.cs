@@ -67,7 +67,7 @@ public class SendInputExample
     const int KEYEVENTF_UNICODE = 0X0004;
     const int KEYEVENTF_SCANCODE = 0x0008;
 
-    const int MAPVK_VK_TO_VSC = 0;
+    const int MAPVK_VK_TO_VSC = 0; //virtual key code -> Virtual Scan Code (https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapvirtualkeyexa)
     
     //======= EXEMPLO DE INPUT DE TECLADO ==========
     //Exemplo de função inserindo uma entrada de botão W e saida de W um segundo depois.
