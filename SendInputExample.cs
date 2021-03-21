@@ -1,19 +1,19 @@
 using System;
 using System.Threading;
-using System.Runtime.InteropServices;
+using System.Runtime.InteropServices; 
 
 public class SendInputExample
 {
     //Estrutura de input
     [StructLayout(LayoutKind.Sequential)]
-    public struct HardwareInput
+    public struct HardwareInput //estrutura de input de hardware comum
     {
         public uint uMsg;
         public ushort wParamL;
         public ushort wParamH;
     };
     [StructLayout(LayoutKind.Sequential)]
-    public struct KeyboardInput
+    public struct KeyboardInput //estrutura de input de teclado
     {
         public short wVK;
         public short wScan;
@@ -22,7 +22,7 @@ public class SendInputExample
         public IntPtr dwExtraInfo;
     };
     [StructLayout(LayoutKind.Sequential)]
-    public struct MouseInput
+    public struct MouseInput // estrutura de input de mouse
     {
         public int dx;
         public int dy;
@@ -37,11 +37,11 @@ public class SendInputExample
     {
         [FieldOffset(0)]
         public int type;
-        [FieldOffset(8)]
+        [FieldOffset(8)] //se o programa for funcionar em hospedeiros x32 é recomendado o FieldOffset ser 4, em caso de x64 colocar 8
         public MouseInput mi;
-        [FieldOffset(8)]
+        [FieldOffset(8)]//se o programa for funcionar em hospedeiros x32 é recomendado o FieldOffset ser 4, em caso de x64 colocar 8
         public KeyboardInput ki;
-        [FieldOffset(8)]
+        [FieldOffset(8)]//se o programa for funcionar em hospedeiros x32 é recomendado o FieldOffset ser 4, em caso de x64 colocar 8
         public HardwareInput hi;
     };
 
@@ -79,14 +79,14 @@ public class SendInputExample
         sInputs = new Input[1];
         Thread.Sleep(4000); // para dar tempo para abrir manualmente a janela que as ações irão ser executadas, o ideal é abrir via codigo
 
-        sInputs[0].type = INPUT_KEYBOARD;
+        sInputs[0].type = INPUT_KEYBOARD; //Definição de qual input é
         sInputs[0].ki.wVK = 0; //ao usar SCANCODE, wVK deve ser 0
         sInputs[0].ki.wScan = MapVirtualKeyExA(VkKeyScanExA('w', GetKeyboardLayout(0)), MAPVK_VK_TO_VSC, GetKeyboardLayout(0));
         sInputs[0].ki.dwExtraInfo = GetMessageExtraInfo(); //ainda não sei para que isso serve, mas ta ai.
         sInputs[0].ki.dwFlags = KEYEVENTF_SCANCODE; // KEYEVENT é 0, significa que o "botão" esta sendo pressionado
 
         int cuj = SendInput((short)sInputs.Length, sInputs, Marshal.SizeOf(new Input())); // vai retornar a quantidade de vezes que o input foi enviado com sucesso, se for igual ao tamanho do sInputs então todos os inputs funcionaram.
-        Console.WriteLine(cuj);
+        Console.WriteLine(cuj); //nesse caso que só tem 1 input por vez, se o valor for 1 então deu tudo certo. se for 0 alguma coisa impediu o input de ser mandado
 
         Thread.Sleep(1000); // o botão W vai ser segurado por 1 segundo antes de ser liberado, se for em um jogo, o personagem vai andar por 1 segundo.
 
@@ -97,5 +97,6 @@ public class SendInputExample
         sInputs[0].ki.dwFlags = KEYEVENTF_SCANCODE | KEYEVENTF_KEYUP; //Keyevent_keyup levanta o "botão"
 
         cuj = SendInput((short)sInputs.Length, sInputs, Marshal.SizeOf(new Input()));
+        Console.WriteLine(cuj); //nesse caso que só tem 1 input por vez, se o valor for 1 então deu tudo certo. se for 0 alguma coisa impediu o input de ser mandado
     }
 }
